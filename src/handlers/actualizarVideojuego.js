@@ -4,36 +4,33 @@ import { v4 as uuid } from "uuid";
 import commonMiddleware from "../../lib/commonMiddleware";
 import createError from "http-errors";
 
-
-
-
 const dynamo = DynamoDBDocumentClient.from(new DynamoDBClient({})); 
-export const crearVideojuego = async (event, context) => {
+export const actualizarVideojuego = async (event, context) => {
   try {
+    const { id } = event.pathParameters;
     const videojuego = event.body;
 
-    const newVideojuego = {
+    const updatedVideoJuego = {
         ...videojuego,
-        status: "Ingresado",
-        fechaIng: new Date().toLocaleDateString(),
-        id: uuid(),
+        id: id,
     };
+
+    await dynamo.send(new PutCommand({
+        TableName: "VideojuegosTable",
+        Item: updatedVideoJuego,
+    }));
 
     const headers = {
       'Content-Type': 'application/json',
       'Access-Control-Allow-Origin' : '*'
     };
 
-    await dynamo.send(new PutCommand({
-      TableName: "VideojuegosTable",
-      Item: newVideojuego,
-  }));
-
+    
     return {
-      statusCode: 201,
-      headers: headers,
-      body: JSON.stringify(newVideojuego)
-    };
+        statusCode: 201,
+        headers: headers,
+        body: JSON.stringify(updatedVideoJuego),
+      }
     
   } catch (error) {
       console.error(error);
@@ -41,4 +38,4 @@ export const crearVideojuego = async (event, context) => {
   }
 };
 
-export const handler = commonMiddleware(crearVideojuego);
+export const handler = commonMiddleware(actualizarVideojuego);

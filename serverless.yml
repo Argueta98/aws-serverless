@@ -15,6 +15,9 @@ provider:
     - Effect: Allow
       Action:
         - dynamodb:PutItem
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:DeleteItem
       Resource:
         - "arn:aws:dynamodb:us-east-1:754162583795:table/VideojuegosTable"
 
@@ -38,8 +41,30 @@ functions:
       - httpApi:
           path: /videojuego
           method: POST
-
-
+  listarVideojuego:
+    handler: src/handlers/listarVideojuego.handler
+    events:
+      - httpApi:
+          path: /videojuegos
+          method: GET
+  buscarVideojuego:
+    handler: src/handlers/buscarVideojuego.handler
+    events:
+      - httpApi:
+          path: /videojuego/{id}
+          method: GET
+  actualizarVideojuego:
+    handler: src/handlers/actualizarVideojuego.handler
+    events:
+      - httpApi:
+          path: /videojuegoU/{id}
+          method: POST
+  eliminarVideojuego:
+    handler: src/handlers/eliminarVideojuego.handler
+    events:
+      - httpApi:
+          path: /videojuegoE/{id}
+          method: DELETE
 custom:
   bundle:
     linting: false

@@ -5,7 +5,7 @@
 </p>    
 <h1 align="center">AWS Serverless UNIVO</h1>
 
-## RUN PORJECT
+## RUN PROJECT
 
 ```
     serverless deploy --verbose
