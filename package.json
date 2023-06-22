@@ -28,6 +28,7 @@
     "@middy/http-event-normalizer": "^4.4.3",
     "@middy/http-json-body-parser": "^4.4.3",
     "http-errors": "^2.0.0",
+    "jsonwebtoken": "^9.0.0",
     "uuid": "^9.0.0"
   }
 }

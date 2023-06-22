@@ -1,4 +1,4 @@
-service: aws-serverless
+service: aws-videojuegos
 frameworkVersion: '2 || 3'
 
 plugins:
@@ -17,16 +17,17 @@ provider:
         - dynamodb:PutItem
         - dynamodb:Scan
         - dynamodb:GetItem
+        - dynamodb:UpdateItem
         - dynamodb:DeleteItem
       Resource:
-        - "arn:aws:dynamodb:us-east-1:754162583795:table/VideojuegosTable"
-
+        - "arn:aws:dynamodb:us-east-1:754162583795:table/VideogamesTable"
+      
 resources:
   Resources:
-    VideojuegosTable:
+    VideogamesTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: VideojuegosTable
+        TableName: VideogamesTable
         AttributeDefinitions:
           - AttributeName: id
             AttributeType: S
@@ -34,37 +35,49 @@ resources:
           - AttributeName: id
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
+
 functions:
   crearVideojuego:
-    handler: src/handlers/crearVideojuego.handler
+    handler: src/handlers/createVideojuego.handler
     events:
-      - httpApi:
-          path: /videojuego
-          method: POST
-  listarVideojuego:
-    handler: src/handlers/listarVideojuego.handler
+      - http:
+          path: /videogame
+          method: post
+          authorizer: ${self:custom.authorizer}
+          cors: true
+  getVideojuegos:
+    handler: src/handlers/getVideojuegos.handler
     events:
-      - httpApi:
-          path: /videojuegos
+      - http:
+          path: /videogame
           method: GET
-  buscarVideojuego:
-    handler: src/handlers/buscarVideojuego.handler
+          authorizer: ${self:custom.authorizer}
+          cors: true 
+  getVideojuegoById:
+    handler: src/handlers/getVideojuegoById.handler
     events:
-      - httpApi:
-          path: /videojuego/{id}
+      - http:
+          path: /videogame/{id}
           method: GET
-  actualizarVideojuego:
-    handler: src/handlers/actualizarVideojuego.handler
+          authorizer: ${self:custom.authorizer}
+          cors: true
+  updateVideojuego:
+    handler: src/handlers/updateVideojuego.handler
     events:
-      - httpApi:
-          path: /videojuegoU/{id}
-          method: POST
-  eliminarVideojuego:
-    handler: src/handlers/eliminarVideojuego.handler
+      - http:
+          path: /videogame/{id}
+          method: PUT
+          authorizer: ${self:custom.authorizer}
+          cors: true
+  deleteVideojuego:
+    handler: src/handlers/deleteVideojuego.handler
     events:
-      - httpApi:
-          path: /videojuegoE/{id}
+      - http:
+          path: /videogame/{id}
           method: DELETE
+          authorizer: ${self:custom.authorizer}
+          cors: true
 custom:
+  authorizer: arn:aws:lambda:us-east-1:754162583795:function:aws-auth-dev-auth
   bundle:
     linting: false
