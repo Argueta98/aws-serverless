@@ -5,6 +5,11 @@
 </p>    
 <h1 align="center">AWS Serverless UNIVO</h1>
 
+## BEFORE EXECUTING THE PROJECT
+
+```
+    npm install
+```
 ## RUN PROJECT
 
 ```
